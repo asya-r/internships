@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   web:
-    build: ./automated-internships
+    build: ./automated-internships-backend
     command: uvicorn core.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
       - ./automated-internships/automated_internships:/code/
