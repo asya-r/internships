@@ -15,7 +15,11 @@ services:
 
   frontend:
     build: ./automated-internships-front
-    command: serve -s build
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        elm-app build
+        serve -s build
     volumes:
       - ./automated-internships-front/automated-internships-front:/app/
     ports:
