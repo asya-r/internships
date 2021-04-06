@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./automated-internships
+    command: uvicorn core.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    volumes:
+      - ./automated-internships/automated_internships:/code/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./automated-internships/env/web.env
+
+  frontend:
+    build: ./automated-internships-front
+    command: serve -s build
+    volumes:
+      - ./automated-internships-front/automated-internships-front:/app/
+    ports:
+      - "5000:5000"
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./automated-internships/env/db.env
+
+volumes:
+  postgres_data:
