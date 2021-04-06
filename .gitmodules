@@ -1,6 +1,3 @@
 [submodule "automated-internships-front"]
 	path = automated-internships-front
 	url = https://github.com/asya-r/automated-internships-front
-[submodule "automated-internships-backend"]
-	path = automated-internships-backend
-	url = https://github.com/1frag/automated-internships-backend
