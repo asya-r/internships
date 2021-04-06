@@ -1,17 +1,22 @@
 version: '3.7'
 
 services:
-  web:
-    build: ./automated-internships-backend
-    command: uvicorn core.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+  backend:
+    build:
+      context: ./automated-internships-backend
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        pip install -e .
+        uvicorn automated_internships.core.main:app --reload --workers 1 --host 0.0.0.0 --port 5001
     volumes:
-      - ./automated-internships/automated_internships:/code/
+      - ./automated-internships-backend/:/code/
     ports:
-      - "8000:8000"
+      - "5001"
     depends_on:
       - db
     env_file:
-      - ./automated-internships/env/web.env
+      - ./automated-internships-backend/env/web.env
 
   frontend:
     build: ./automated-internships-front
@@ -23,7 +28,7 @@ services:
     volumes:
       - ./automated-internships-front/automated-internships-front:/app/
     ports:
-      - "5000:5000"
+      - "5000"
 
   db:
     image: postgres:13
@@ -32,7 +37,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./automated-internships/env/db.env
+      - ./automated-internships-backend/env/db.env
+
+  nginx:
+    image: nginx:1.15-alpine
+    depends_on:
+      - backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
 
 volumes:
   postgres_data:
